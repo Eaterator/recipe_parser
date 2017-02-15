@@ -69,6 +69,23 @@ class MainIngredientTagger(Tagger):
         cls.__tagger = nltk.tag.UnigramTagger(model=model, backoff=backoff)
 
 
+class BigramIngredientTagger(Tagger):
+    __tagger = None
+
+    @classmethod
+    def get_tagger(cls, backoff=None):
+        if not cls.__tagger:
+            cls._create_tagger(backoff=backoff)
+        return cls.__tagger
+
+    @classmethod
+    def _create_tagger(cls, backoff=None):
+        model = {}
+        for ingredient in BIGRAM_INGREDIENTS:
+            model[ingredient] = MAIN_INGREDIENT_TAG
+        cls.__tagger = nltk.tag.BigramTagger(model=model, backoff=backoff)
+
+
 class IngredientRegexpTagger(Tagger):
     __tagger = None
     patterns = [
@@ -162,7 +179,7 @@ MEASUREMENTS = {
     'millilitre': [
         'milliliter',
         'ml',
-        'cc'
+        'cc',
     ],
     'litre': [
         'liter',
@@ -207,8 +224,8 @@ MEASUREMENTS = {
     ],
     'a': [
         'an',
-        'single'
-        'couple'
+        'single',
+        'couple',
     ]
 }
 
@@ -250,6 +267,14 @@ MAIN_INGREDIENTS = [
     'salmon',
     'halibut',
     'tuna',
+    'steak',
+    'potatoes',
+    'potato',
+]
+
+BIGRAM_INGREDIENTS = [
+    (('green',), 'pepper'),
+    (('red',), 'pepper'),
 ]
 
 # TODO implement a conversion utility here?

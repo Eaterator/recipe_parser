@@ -1,13 +1,17 @@
+import re
 from nltk import sent_tokenize, RegexpParser
 from nltk.tree import Tree
+from string import punctuation
 from recipe_parser import TAGGER, LEMMATIZER, TOKENIZER, AMOUNT_PATTERN, GRAMMAR, TEXT_TO_NUM_CONVERSION_FUNCTIONS
-import re
+
+AMOUNT_TRANSLATOR = str.maketrans('', '', punctuation)
+punctuation = ''.join(c for c in punctuation if c not in '/()')
+TEXT_CLEANER = str.maketrans('', '', punctuation)
 
 
-# may best best roll own numerical converter specialized for
 class ParsedValuesMixin:
     """
-    Mixin to allow the instatiation of Ingredient and Amount classes with a dict type
+    Mixin to allow the instatiating Ingredient and Amount classes with a dict type
     """
     def __init__(self, **kwargs):
         self.__dict__.update(**kwargs)
@@ -101,12 +105,12 @@ class IngredientParser:
 
     def parse(self, text):
         text = text.lower()
-        amount_data = [tree for tree in
-                       [self._parse_sentence_tree(i) for i in AMOUNT_PATTERN.findall(text)]
-                       if isinstance(tree, Tree) and tree.label() == 'Amount'
+        amount_data = [tree[0] if tree.label() == 'S' else tree for tree in
+                       [self._parse_sentence_tree(i.translate(AMOUNT_TRANSLATOR)) for i in AMOUNT_PATTERN.findall(text)]
                        ]
         re.sub(AMOUNT_PATTERN, '', text)
-        sentence_tree = self._parse_sentence_tree(text)
+        sentence_tree = self._parse_sentence_tree(text.translate(TEXT_CLEANER))
+        print(sentence_tree)
         amount_data.extend([i for i in sentence_tree if isinstance(i, Tree) and i.label() == 'Amount'])
         return ParsedIngredient(
             self._find_ingredient(sentence_tree),
@@ -119,11 +123,10 @@ class IngredientParser:
         for item in sentence_tree:
             amounts.append(self._convert_from_text(item))
             for tag in item[::-1]:
-                if tag[1] in ['NN', 'NNS']:
+                if tag[1] == 'MM':
                     units.append(tag[0])
                     break
-                units.append(None)
-
+                units.append('')
         return [Amount(value=a, unit=LEMMATIZER.lemmatize(u)) for a, u in zip(amounts, units)]
 
     @staticmethod
@@ -143,13 +146,10 @@ class IngredientParser:
     def _find_ingredient(sentence_tree):
         for item in sentence_tree[::-1]:
             if isinstance(item, Tree) and item.label() == 'NPI':
-                print("sentence tree: " + str(sentence_tree))
                 primary = ' '.join(LEMMATIZER.lemmatize(i[0]) for i in item
                                    if i[1] in ['NN', 'NNS', 'VBN'] and i[0] != ' ')
                 modifiers = ' '.join(LEMMATIZER.lemmatize(i[0]) for i in item
                                      if i[1] not in ['NN', 'NNS', 'VBN'] and i[0] != ' ')
-                print('primary: ' + primary)
-                print('modifiers: ' + modifiers)
                 return Ingredient(
                     **dict(
                         primary=primary,
