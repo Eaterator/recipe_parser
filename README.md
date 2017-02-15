@@ -8,3 +8,9 @@ required for the case where the <NN> for measurement amount does not exist (i.e.
 
 ##Requirements
 NLTK and Python (version 3.5.2).
+
+##Sources
+A Ruby recipe parser is available here for inspiration:
+
+    https://github.com/iancanderson/ingreedy/blob/master/lib/ingreedy/dictionaries/en.yml
+

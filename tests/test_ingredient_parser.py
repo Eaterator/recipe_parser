@@ -7,21 +7,26 @@ class TestIngredientParser(TestCase):
     def setUp(self):
         self.parser = IngredientParser.get_parser()
 
-    def test_text_to_fraction(self):
-        pass
-
-    def test_text_to_number(self):
-        pass
-
-    def test_fraction_to_numer(self):
-        pass
+    # def test_text_to_fraction(self):
+    #     pass
+    #
+    # def test_text_to_number(self):
+    #     pass
+    #
+    # def test_fraction_to_number(self):
+    #     pass
 
     def test_ingredient_parser(self):
         for ingredient_text, expected_ingredient, expected_amount in \
                 zip(TEST_INGREDIENTS, EXPECTED_INGREDIENTS, EXPECTED_AMOUNTS):
+            print('test case: ' + ingredient_text)
             parsed_ingredient = self.parser(ingredient_text)
             ingredient_data = parsed_ingredient.parsed_ingredient
 
+            print(ingredient_data.ingredient.primary)
+            print(ingredient_data.ingredient.modifier)
+            print(ingredient_data.amount.value)
+            print(ingredient_data.amount.unit)
             self.assertEqual(ingredient_data.ingredient.primary, expected_ingredient['ingredient'])
             self.assertEqual(ingredient_data.ingredient.modifier, expected_ingredient['modifiers'])
             self.assertEqual(ingredient_data.amount.value, expected_amount['value'])
@@ -52,8 +57,8 @@ EXPECTED_INGREDIENTS = [
 
 EXPECTED_AMOUNTS = [
     dict(value=0.5, unit='cup'),
-    dict(value=3, unit='pounds'),
-    dict(value=4, unit='pounds'),
+    dict(value=3, unit='pound'),
+    dict(value=4, unit='pound'),
     dict(value=4, unit=None),
     dict(value=1, unit='tablespoon'),
     dict(value=1.5, unit='tbl'),
