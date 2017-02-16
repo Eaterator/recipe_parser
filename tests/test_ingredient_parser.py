@@ -45,6 +45,7 @@ TEST_INGREDIENTS = [
     '1 tablespoon salt',
     '1 1/2 tbl pepper',
     '1 green pepper',
+    '5 banana peppers',
     '1 red pepper',
 ]
 
@@ -56,6 +57,7 @@ EXPECTED_INGREDIENTS = [
     dict(modifiers='', ingredient='salt'),
     dict(modifiers='', ingredient='pepper'),
     dict(modifiers='', ingredient='green pepper'),
+    dict(modifiers='', ingredient='banana pepper'),
     dict(modifiers='', ingredient='red pepper')
 ]
 
@@ -67,6 +69,7 @@ EXPECTED_AMOUNTS = [
     dict(value=1, unit='tablespoon'),
     dict(value=1.5, unit='tbl'),
     dict(value=1, unit=''),
+    dict(value=5, unit=''),
     dict(value=1, unit='')
 ]
 

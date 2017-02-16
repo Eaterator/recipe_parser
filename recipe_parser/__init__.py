@@ -1,7 +1,7 @@
 from recipe_parser.ingredient_tagger import MeasurementTagger, IngredientRegexpTagger, DefaultTagger, NumericalTagger,\
     MainIngredientTagger, BigramIngredientTagger
 from nltk.stem import WordNetLemmatizer
-from nltk import word_tokenize, sent_tokenize
+from nltk import word_tokenize
 from fractions import Fraction
 from recipe_parser.text2fraction import Text2Fraction
 from recipe_parser.text2num import text2num

@@ -2,7 +2,8 @@ from unittest import TestCase, main as run_tests
 from recipe_parser import TAGGER
 from recipe_parser.ingredient_tagger import MEASUREMENT_TAG as MEASUREMENT, FRACTION_TAG as FRACTION,\
     MAIN_INGREDIENT_TAG as MAIN_INGREDIENT
-from recipe_parser import TOKENIZER, sent_tokenize
+from recipe_parser import TOKENIZER
+from nltk import sent_tokenize
 from recipe_parser.ingredient_tagger import MEASUREMENTS, NUMERICAL
 from random import Random
 
