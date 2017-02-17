@@ -3,6 +3,7 @@ from nltk import sent_tokenize, RegexpParser
 from nltk.tree import Tree
 from string import punctuation
 from recipe_parser import TAGGER, LEMMATIZER, TOKENIZER, AMOUNT_PATTERN, GRAMMAR, TEXT_TO_NUM_CONVERSION_FUNCTIONS
+from recipe_parser.text_to_num import NumberException
 
 AMOUNT_TRANSLATOR = str.maketrans('', '', punctuation)
 punctuation = ''.join(c for c in punctuation if c not in '/()')
@@ -136,9 +137,12 @@ class IngredientParser:
             if a[1] == 'CD':
                 for func in TEXT_TO_NUM_CONVERSION_FUNCTIONS:
                     try:
-                        values.append(func(a))
+                        value = func(a)
+                        if not value:
+                            raise ValueError()
+                        values.append(value)
                         break
-                    except ValueError:
+                    except (ValueError, NumberException):
                         pass
         return sum(values)
 
@@ -157,8 +161,3 @@ class IngredientParser:
                     )
                 )
         return None
-
-
-if __name__ == '__main__':
-    parse_func = IngredientParser.get_parser()
-    xx = parse_func("1 1/2 cup vegetable oil")
