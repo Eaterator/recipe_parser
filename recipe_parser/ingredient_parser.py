@@ -8,6 +8,7 @@ from recipe_parser.text_to_num import NumberException
 AMOUNT_TRANSLATOR = str.maketrans('', '', punctuation)
 punctuation = ''.join(c for c in punctuation if c not in '/()')
 TEXT_CLEANER = str.maketrans('', '', punctuation)
+DEBUG_PRINT = False
 
 
 class ParsedValuesMixin:
@@ -101,7 +102,7 @@ class IngredientParser:
         try:
             return self._sentence_parser.parse(tagged_sentences[0])
         except IndexError:
-            raise BadRecipeException("Could not parse a sentence using the grammar rules")
+            raise BadIngredientException("Could not parse a sentence using the grammar rules for the ingredient")
 
     @staticmethod
     def _clean_grammar(grammar):
@@ -113,8 +114,13 @@ class IngredientParser:
                        [self._parse_sentence_tree(i.translate(AMOUNT_TRANSLATOR)) for i in AMOUNT_PATTERN.findall(text)]
                        ]
         re.sub(AMOUNT_PATTERN, '', text)
-        sentence_tree = self._parse_sentence_tree(text.translate(TEXT_CLEANER))
-        print(sentence_tree)
+        try:
+            sentence_tree = self._parse_sentence_tree(text.translate(TEXT_CLEANER))
+        except BadIngredientException:
+            # TODO logger here?!
+            return None
+        if DEBUG_PRINT:
+            print(sentence_tree)
         amount_data.extend([i for i in sentence_tree if isinstance(i, Tree) and i.label() == 'Amount'])
         return ParsedIngredient(
             self._find_ingredient(sentence_tree),
@@ -170,5 +176,5 @@ class IngredientParser:
         return None
 
 
-class BadRecipeException(Exception):
+class BadIngredientException(Exception):
     pass
