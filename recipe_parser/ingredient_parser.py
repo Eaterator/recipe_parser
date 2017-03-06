@@ -134,6 +134,8 @@ class IngredientParser:
     def _convert_from_text(amount_tree):
         values = []
         for a in amount_tree:
+            if len(a) < 2:
+                continue
             if a[1] == 'CD':
                 for func in TEXT_TO_NUM_CONVERSION_FUNCTIONS:
                     try:
