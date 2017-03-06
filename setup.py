@@ -2,7 +2,7 @@ from distutils.core import setup
 from setuptools import find_packages
 
 setup(
-    name='Recipe Parser',
+    name='recipe-parser',
     version='0.1',
     description="Parser for ingredients and quantities in a recipe using NLTK and heuristics",
     author="Lucas Currah",
