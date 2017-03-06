@@ -98,7 +98,10 @@ class IngredientParser:
 
     def _parse_sentence_tree(self, text):
         tagged_sentences = [self._pos_tagger.tag(s) for s in [TOKENIZER(ss) for ss in sent_tokenize(text)]]
-        return self._sentence_parser.parse(tagged_sentences[0])
+        try:
+            return self._sentence_parser.parse(tagged_sentences[0])
+        except IndexError:
+            raise BadRecipeException("Could not parse a sentence using the grammar rules")
 
     @staticmethod
     def _clean_grammar(grammar):
@@ -165,3 +168,7 @@ class IngredientParser:
                     )
                 )
         return None
+
+
+class BadRecipeException(Exception):
+    pass
