@@ -124,6 +124,8 @@ class IngredientParser:
         for item in sentence_tree:
             amounts.append(self._convert_from_text(item))
             for tag in item[::-1]:
+                if len(tag) < 2:
+                    continue
                 if tag[1] == 'MM':
                     units.append(tag[0])
                     break
@@ -153,9 +155,9 @@ class IngredientParser:
         for item in sentence_tree[::-1]:
             if isinstance(item, Tree) and item.label() == 'NPI':
                 primary = ' '.join(LEMMATIZER.lemmatize(i[0]) for i in item
-                                   if i[1] in ['NN', 'NNS', 'VBN'] and i[0] != ' ')
+                                   if len(i) == 2 and i[1] in ['NN', 'NNS', 'VBN'] and i[0] != ' ')
                 modifiers = ' '.join(LEMMATIZER.lemmatize(i[0]) for i in item
-                                     if i[1] not in ['NN', 'NNS', 'VBN'] and i[0] != ' ')
+                                     if len(i) == 2 and i[1] not in ['NN', 'NNS', 'VBN'] and i[0] != ' ')
                 return Ingredient(
                     **dict(
                         primary=primary,
