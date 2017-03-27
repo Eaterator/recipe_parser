@@ -2,7 +2,8 @@ import re
 from nltk import sent_tokenize, RegexpParser
 from nltk.tree import Tree
 from string import punctuation
-from recipe_parser import TAGGER, LEMMATIZER, TOKENIZER, AMOUNT_PATTERN, GRAMMAR, TEXT_TO_NUM_CONVERSION_FUNCTIONS
+from recipe_parser import TAGGER, LEMMATIZER, TOKENIZER, AMOUNT_PATTERN, GRAMMAR, TEXT_TO_NUM_CONVERSION_FUNCTIONS, \
+    MEASUREMENT_LOOKUP
 from recipe_parser.text_to_num import NumberException
 
 AMOUNT_TRANSLATOR = str.maketrans('', '', punctuation)
@@ -136,10 +137,10 @@ class IngredientParser:
                 if len(tag) < 2:
                     continue
                 if tag[1] == 'MM':
-                    units.append(tag[0])
+                    units.append(MEASUREMENT_LOOKUP[LEMMATIZER.lemmatize(tag[0])])
                     break
                 units.append('')
-        return [Amount(value=a, unit=LEMMATIZER.lemmatize(u)) for a, u in zip(amounts, units)]
+        return [Amount(value=a, unit=u) for a, u in zip(amounts, units)]
 
     @staticmethod
     def _convert_from_text(amount_tree):

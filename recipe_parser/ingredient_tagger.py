@@ -87,7 +87,7 @@ class IngredientRegexpTagger(Tagger):
         (r'.*ing$', 'VB'),
         (r'.*ed', 'MOD'),
         (r'.*less', 'JJ'),
-        (r'[0-9]+', 'CD')
+        (r'[0-9]+', 'CD'),
     ]
 
     @classmethod
@@ -192,19 +192,6 @@ class MeasurementTagger(Tagger):
                 model[item+m] = MEASUREMENT_TAG
 
 
-class Unit:
-    """
-    A class that could implement conversion utilities. This will come in hand to implement a common base unit for
-    determining the importance of the ingredient in the recipe, prioritizing the ingredients that make up the bulk
-    of the recipe by mass.
-    """
-    def __init__(self, *args, **kwargs):
-        pass
-
-    def convert(self):
-        pass
-
-
 MEASUREMENTS = {
     'gill': [
         'gill',
@@ -295,6 +282,10 @@ MEASUREMENTS = {
         'couple',
     ]
 }
+
+MEASUREMENT_LOOKUP = {value: standard for standard in MEASUREMENTS.keys()
+                      for value in MEASUREMENTS[standard]}
+MEASUREMENT_LOOKUP.update({standard: standard for standard in MEASUREMENTS.keys()})
 
 NUMERICAL = [
     '1/2',

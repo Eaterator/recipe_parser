@@ -67,7 +67,7 @@ EXPECTED_AMOUNTS = [
     dict(value=4, unit='pound'),
     dict(value=4, unit=''),
     dict(value=1, unit='tablespoon'),
-    dict(value=1.5, unit='tbl'),
+    dict(value=1.5, unit='tablespoon'),
     dict(value=1, unit=''),
     dict(value=5, unit=''),
     dict(value=1, unit='')

@@ -1,4 +1,4 @@
-from recipe_parser.ingredient_tagger import Tagger
+from recipe_parser.ingredient_tagger import Tagger, MEASUREMENT_LOOKUP
 from nltk.stem import WordNetLemmatizer
 from nltk import word_tokenize
 from fractions import Fraction
@@ -28,5 +28,5 @@ TEXT_TO_NUM_CONVERSION_FUNCTIONS = [
     lambda x: Fraction(x[0]),
     lambda x: Text2Fraction.text_to_fraction(x[0]),
     lambda x: text2num(x[0]),
-    lambda x: any(i[0] in ['a', 'an', 'single'] for i in x)
+    lambda x: any(w[0] in ['a', 'an', 'single'] for w in x)
 ]
