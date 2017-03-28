@@ -22,7 +22,7 @@ class AmountPercentConverter:
     @staticmethod
     def _convert_units(amount, unit):
         if amount and unit:
-            return amount / CONVERSIONS[unit]
+            return amount / CONVERSION_LOOKUP[unit]
         elif amount and not unit:
             return amount * DEFAULT_UNITLESS
         return DEFAULT_UNKNOWN_AMOUNT
@@ -42,7 +42,7 @@ CONVERSIONS = {
         'litre': 0.236588,
         'decilitre': 2.36588,
         'pound': 0.52159,
-        'milligram': 0.220,
+        'milligram': 220000,
         'gram': 220,
         'kilogram': 0.220,
         'pinch': 768,
@@ -55,3 +55,5 @@ CONVERSIONS = {
         'a': 8
     }
 }
+
+CONVERSION_LOOKUP = {k: v for k, v in CONVERSIONS['cup'].items()}
