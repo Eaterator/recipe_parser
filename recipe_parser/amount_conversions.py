@@ -25,7 +25,7 @@ class AmountPercentConverter:
             else:
                 ri.percent_amount = MAXIMUM_UNKNOWN_PERCENT_AMOUNT
                 redis_amount += amount - MAXIMUM_UNKNOWN_PERCENT_AMOUNT
-        redis_amount = redis_amount / sum(is_unknown)
+        redis_amount = redis_amount / sum(is_unknown) if sum(is_unknown) > 0 else 0
         for i, _ in enumerate(recipe_ingredients):
             recipe_ingredients[i].percent_amount = amounts[i] + redis_amount if not is_unknown[i] else amounts[i]
         return
