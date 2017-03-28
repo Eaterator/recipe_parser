@@ -1,5 +1,6 @@
 DEFAULT_UNKNOWN_AMOUNT = 0.2
 DEFAULT_UNITLESS = 0.2
+MAXIMUM_UNKNOWN_PERCENT_AMOUNT = 0.1
 
 
 class AmountPercentConverter:
@@ -12,20 +13,30 @@ class AmountPercentConverter:
         """
         amounts = [ri.ingredient_amount for ri in recipe_ingredients]
         units = [ri.amount_units for ri in recipe_ingredients]
+        is_unknown = [False] * len(amounts)
         for i, amount in enumerate(amounts):
-            amounts[i] = self._convert_units(amount, units[i])
+            amounts[i], is_unknown[i] = self._convert_units(amount, units[i])
         total_amounts = sum(amounts)
-        for ri, a in zip(recipe_ingredients, amounts):
-            ri.percent_amount = a/total_amounts
+        redis_amount = 0
+        for i, (ri, a) in enumerate(zip(recipe_ingredients, amounts)):
+            amount = a / total_amounts
+            if amount < MAXIMUM_UNKNOWN_PERCENT_AMOUNT and is_unknown[i]:
+                ri.percent_amount = amount
+            else:
+                ri.percent_amount = MAXIMUM_UNKNOWN_PERCENT_AMOUNT
+                redis_amount += amount - MAXIMUM_UNKNOWN_PERCENT_AMOUNT
+        redis_amount = redis_amount / sum(is_unknown)
+        for i, _ in enumerate(recipe_ingredients):
+            recipe_ingredients[i].percent_amount = amounts[i] + redis_amount if not is_unknown[i] else amounts[i]
         return
 
     @staticmethod
     def _convert_units(amount, unit):
         if amount and unit:
-            return amount / CONVERSION_LOOKUP[unit]
+            return amount / CONVERSION_LOOKUP[unit], False
         elif amount and not unit:
-            return amount * DEFAULT_UNITLESS
-        return DEFAULT_UNKNOWN_AMOUNT
+            return amount * DEFAULT_UNITLESS, True
+        return DEFAULT_UNKNOWN_AMOUNT, True
 
 
 CONVERSIONS = {
