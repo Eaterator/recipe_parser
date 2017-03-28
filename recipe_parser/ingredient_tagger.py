@@ -204,6 +204,7 @@ MEASUREMENTS = {
     'tablespoon': [
         'T',
         'tbl',
+        'tb',
         'tbs',
         'tbsp',
     ],
