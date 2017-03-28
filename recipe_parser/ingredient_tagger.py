@@ -286,6 +286,7 @@ MEASUREMENTS = {
 MEASUREMENT_LOOKUP = {value: standard for standard in MEASUREMENTS.keys()
                       for value in MEASUREMENTS[standard]}
 MEASUREMENT_LOOKUP.update({standard: standard for standard in MEASUREMENTS.keys()})
+MEASUREMENT_LOOKUP.update({k+'s': v for k, v in MEASUREMENT_LOOKUP.items()})
 
 NUMERICAL = [
     '1/2',
