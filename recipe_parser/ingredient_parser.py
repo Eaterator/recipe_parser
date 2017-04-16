@@ -103,7 +103,8 @@ class IngredientParser:
         try:
             return self._sentence_parser.parse(tagged_sentences[0])
         except IndexError:
-            raise BadIngredientException("Could not parse a sentence using the grammar rules for the ingredient")
+            raise BadIngredientException("Could not parse a sentence using the grammar rules for the ingredient: {0}"
+                                         .format(text))
 
     @staticmethod
     def _clean_grammar(grammar):

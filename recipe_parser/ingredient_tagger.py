@@ -265,9 +265,11 @@ MEASUREMENTS = {
     ],
     'dash': [
         'dashes',
+        'dash'
     ],
     'touch': [
         'touches',
+        'touche'
     ],
     'handful': [
     ],
